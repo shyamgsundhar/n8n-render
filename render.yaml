@@ -2,10 +2,8 @@ services:
   - type: web
     name: n8n
     runtime: image
-
     image:
-      url: docker.n8n.io/n8nio/n8n:latest
-
+      url: n8nio/n8n
     plan: free
     region: singapore
 
@@ -14,39 +12,48 @@ services:
         value: postgresdb
 
       - key: DB_POSTGRESDB_HOST
-        fromDatabase:
-          name: n8n-postgres
-          property: host
+        value: ep-bitter-lake-b54kdt42-pooler.c-7.us-east-2.aws.neon.tech
 
       - key: DB_POSTGRESDB_PORT
-        fromDatabase:
-          name: n8n-postgres
-          property: port
+        value: "5432"
 
       - key: DB_POSTGRESDB_DATABASE
-        fromDatabase:
-          name: n8n-postgres
-          property: database
+        value: neondb
 
       - key: DB_POSTGRESDB_USER
-        fromDatabase:
-          name: n8n-postgres
-          property: user
+        value: neondb_owner
 
       - key: DB_POSTGRESDB_PASSWORD
-        fromDatabase:
-          name: n8n-postgres
-          property: password
+        sync: false
 
-      - key: N8N_PORT
-        value: "5678"
+      - key: DB_POSTGRESDB_SCHEMA
+        value: public
 
-      - key: N8N_PROTOCOL
-        value: https
+      - key: DB_POSTGRESDB_SSL_ENABLED
+        value: "true"
+
+      - key: DB_PING_TIMEOUT_MS
+        value: "10000"
+
+      - key: N8N_ENCRYPTION_KEY
+        generateValue: true
+
+      - key: NODE_OPTIONS
+        value: "--max-old-space-size=400"
+
+      - key: N8N_DIAGNOSTICS_ENABLED
+        value: "false"
+
+      - key: EXECUTIONS_DATA_PRUNE
+        value: "true"
+
+      - key: EXECUTIONS_DATA_MAX_AGE
+        value: "72"
+
+      - key: EXECUTIONS_DATA_SAVE_ON_SUCCESS
+        value: "none"
+
+      - key: N8N_METRICS
+        value: "false"
 
     healthCheckPath: /healthz
-
-databases:
-  - name: n8n-postgres
-    plan: free
-    postgresMajorVersion: "18"
