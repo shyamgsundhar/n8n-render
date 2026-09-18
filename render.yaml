@@ -2,8 +2,10 @@ services:
   - type: web
     name: n8n
     runtime: image
+
     image:
       url: n8nio/n8n
+
     plan: free
     region: singapore
 
@@ -12,7 +14,7 @@ services:
         value: postgresdb
 
       - key: DB_POSTGRESDB_HOST
-        value: ep-bitter-lake-b54kdt42-pooler.c-7.us-east-2.aws.neon.tech
+        value: ep-curly-block-b5qa0fut-pooler.c-7.us-east-2.aws.neon.tech
 
       - key: DB_POSTGRESDB_PORT
         value: "5432"
