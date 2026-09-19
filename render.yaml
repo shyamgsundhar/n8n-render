@@ -4,12 +4,17 @@ services:
     runtime: image
 
     image:
-      url: n8nio/n8n
+      url: n8nio/n8n:2.39.8
 
     plan: free
     region: singapore
 
     envVars:
+
+      # =========================
+      # DATABASE
+      # =========================
+
       - key: DB_TYPE
         value: postgresdb
 
@@ -34,17 +39,65 @@ services:
       - key: DB_POSTGRESDB_SSL_ENABLED
         value: "true"
 
-      - key: DB_PING_TIMEOUT_MS
+      # =========================
+      # DATABASE CONNECTION
+      # =========================
+
+      - key: DB_POSTGRESDB_CONNECTION_TIMEOUT
+        value: "30000"
+
+      - key: DB_POSTGRESDB_IDLE_CONNECTION_TIMEOUT
+        value: "30000"
+
+      - key: DB_POSTGRESDB_KEEP_ALIVE
+        value: "true"
+
+      - key: DB_POSTGRESDB_KEEP_ALIVE_INITIAL_DELAY_MS
         value: "10000"
 
+      - key: DB_POSTGRESDB_MAX_CONNECTION_LIFETIME_MS
+        value: "3600000"
+
+      # n8n database health check
+      - key: DB_PING_TIMEOUT_MS
+        value: "30000"
+
+      - key: DB_PING_MAX_FAILURES_BEFORE_RECOVERY
+        value: "5"
+
+      - key: DB_RECOVERY_BACKOFF_MIN_MS
+        value: "1000"
+
+      - key: DB_RECOVERY_BACKOFF_MAX_MS
+        value: "30000"
+
+      # =========================
+      # N8N SECURITY
+      # =========================
+
       - key: N8N_ENCRYPTION_KEY
-        generateValue: true
+        sync: false
+
+      # =========================
+      # SERVER
+      # =========================
+
+      - key: N8N_PORT
+        value: "5678"
+
+      - key: N8N_PROTOCOL
+        value: "https"
+
+      # =========================
+      # MEMORY
+      # =========================
 
       - key: NODE_OPTIONS
         value: "--max-old-space-size=400"
 
-      - key: N8N_DIAGNOSTICS_ENABLED
-        value: "false"
+      # =========================
+      # EXECUTION DATA
+      # =========================
 
       - key: EXECUTIONS_DATA_PRUNE
         value: "true"
@@ -55,7 +108,34 @@ services:
       - key: EXECUTIONS_DATA_SAVE_ON_SUCCESS
         value: "none"
 
+      # =========================
+      # DIAGNOSTICS / METRICS
+      # =========================
+
+      - key: N8N_DIAGNOSTICS_ENABLED
+        value: "false"
+
       - key: N8N_METRICS
+        value: "false"
+
+      # =========================
+      # FUTURE DEFAULTS
+      # =========================
+
+      - key: N8N_RUNNERS_TASK_TIMEOUT
+        value: "300"
+
+      - key: N8N_COMPRESSION_NODE_MAX_DECOMPRESSED_SIZE_BYTES
+        value: "268435456"
+
+      - key: N8N_COMPRESSION_NODE_MAX_ZIP_ENTRIES
+        value: "1000"
+
+      # =========================
+      # COMMUNITY PACKAGES
+      # =========================
+
+      - key: N8N_UNVERIFIED_PACKAGES_ENABLED
         value: "false"
 
     healthCheckPath: /healthz
